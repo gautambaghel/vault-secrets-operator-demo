@@ -1,5 +1,6 @@
-# vault-operator
+# Vault Operator Demo
 
+This repository contains some samples on how to use the Vault operator with different Cloud hosted Kubernetes solutions.
 
 # AWS
 
