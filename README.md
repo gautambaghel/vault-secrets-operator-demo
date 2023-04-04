@@ -64,7 +64,15 @@ $ helm search repo hashicorp/vault
 $ helm install vault hashicorp/vault -n vault --create-namespace --values vault/vault-values.yaml
 ```
 
-## Configure Vault
+## Deploy the Vault Operator
+
+```shell
+$ helm install vault-secrets-operator hashicorp/vault-secrets-operator --version 0.1.0-beta -n vault-secrets-operator-system --create-namespace --values vault/vault-operator-values.yaml
+```
+
+## Working with static secrets
+
+### Configure Vault
 
 ```shell
 $ kubectl exec --stdin=true --tty=true vault-0 -n vault -- /bin/sh
@@ -97,27 +105,21 @@ $ vault kv put kvv2/webapp/config username="static-user-kvv2" password="static-p
 $ exit
 ```
 
-## Deploy the Vault Operator
-
-```shell
-$ helm install vault-secrets-operator hashicorp/vault-secrets-operator --version 0.1.0-beta -n vault-secrets-operator-system --create-namespace --values vault/vault-operator-values.yaml
-```
-
-## Create a new namespace for the demo app & the static secret CRDs
+### Create a new namespace for the demo app & the static secret CRDs
 
 ```shell
 $ kubectl create ns app
 $ kubectl apply -f vault/static-secret.yaml
 ```
 
-## Verify the static secrets were created
+### Verify the static secrets were created
 
 ```shell
 $ kubectl get secret secretkv -n app -o json | jq -r .data._raw | base64 -D
 $ kubectl get secret secretkvv2 -n app -o json | jq -r .data._raw | base64 -D
 ```
 
-## Change the secrets and verify they are synced
+### Change the secrets and verify they are synced
 
 ```shell
 $ kubectl exec --stdin=true --tty=true vault-0 -n vault -- /bin/sh
@@ -126,9 +128,59 @@ $ vault kv put kvv2/webapp/config username="new-static-user-kvv2" password="new-
 $ exit
 ```
 
-## Verify the static secrets were updated (wait 30s)
+### Verify the static secrets were updated (wait 30s)
 
 ```shell
 $ kubectl get secret secretkv -n app -o json | jq -r .data._raw | base64 -D
 $ kubectl get secret secretkvv2 -n app -o json | jq -r .data._raw | base64 -D
+```
+
+## Working with dynamic secrets
+
+
+### Deploy Postgres Server
+
+```shell
+$ kubectl create ns postgres
+$ helm repo add bitnami https://charts.bitnami.com/bitnami
+$ helm upgrade --install postgres bitnami/postgresql --namespace postgres --set auth.audit.logConnections=true
+$ export POSTGRES_PASSWORD=$(kubectl get secret --namespace postgres postgres-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
+$ echo $POSTGRES_PASSWORD
+```
+
+### Configure Vault
+
+```shell
+$ kubectl exec --stdin=true --tty=true vault-0 -n vault -- /bin/sh
+$ vault secrets enable database
+
+# Paste the POSTGRES_PASSWORD from the step above
+$ vault write database/config/postgres \
+    plugin_name=postgresql-database-plugin \
+    allowed_roles="dev-postgres" \
+    connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql.postgres.svc.cluster.local:5432/postgres?sslmode=disable" \
+    username="postgres" \
+    password=""
+
+$ vault write database/roles/dev-postgres \
+    db_name=postgres \
+    creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; \
+        GRANT ALL PRIVILEGES ON DATABASE postgres TO \"{{name}}\";" \
+    backend=demo-db \
+    name=dev-postgres \
+    default_ttl="1h" \
+    max_ttl="24h"
+
+$ vault write database/roles/postgres \
+  db_name=postgres \
+  creation_statements='["CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '\''{{password}}'\'' VALID UNTIL '\''{{expiration}}'\'';", "GRANT SELECT ON ALL TABLES IN SCHEMA public TO \"{{name}}\";"]' \
+  backend=demo-db \
+  name=dev-postgres
+
+$ vault policy write null/demo-auth-policy-db - <<EOT
+path "demo-db/creds/dev-postgres" {
+  capabilities = ["read"]
+}
+EOT
+
 ```
