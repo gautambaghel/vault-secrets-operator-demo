@@ -13,9 +13,8 @@ This repository contains some samples on how to use the Vault operator with diff
 ### KIND
 
 ```shell
-$ kind get clusters | grep --silent "^kind$$" || \
-$ kind create cluster --wait=5m --image kindest/node:v1.25.3 --name kind --config kind/config.yaml
-$ kubectl config use-context kind
+$ kind get clusters | grep --silent "^kind$$" || kind create cluster --wait=5m --image kindest/node:v1.25.3 --name kind --config kind/config.yaml
+$ kubectl config use-context kind-kind
 ```
 
 ### GCP
@@ -23,12 +22,11 @@ $ kubectl config use-context kind
 ```shell       
 $ gcloud init
 $ gcloud auth application-default login
-$ # Add project_id to terraform.tfvars file
-$ gcloud config get-value project
+$ echo 'project_id = "'$(gcloud config get-value project)'"' > gke/terraform.tfvars && echo 'region = "us-west1"' >> gke/terraform.tfvars
 
 $ terraform -chdir=gke/ init -upgrade
 $ terraform -chdir=gke/ apply -auto-approve
-$ aws eks --region $(terraform -chdir=eks/ output -raw region) update-kubeconfig --name $(terraform -chdir=eks/ output -raw cluster_name)
+$ gcloud container clusters get-credentials $(terraform -chdir=gke/ output -raw kubernetes_cluster_name) --region $(terraform -chdir=gke/ output -raw region)
 ```
 
 ### AWS

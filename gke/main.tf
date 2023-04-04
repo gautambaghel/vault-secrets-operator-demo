@@ -18,10 +18,6 @@ resource "google_container_cluster" "primary" {
   workload_identity_config {
     workload_pool = "${var.project_id}.svc.id.goog"
   }
-
-  depends_on = [
-    google_container_registry_repository.gar_repository,
-  ]
 }
 
 # Separately Managed Node Pool
