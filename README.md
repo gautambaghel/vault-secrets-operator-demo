@@ -245,3 +245,11 @@ $ exit
 $ kubectl create ns demo-ns
 $ kubectl apply -f vault/dynamic-secrets/.
 ```
+
+### Verify the App pods are running
+
+```shell
+$ kubectl get pods -n demo-ns
+$ kubectl get secret vso-db-demo -n demo-ns -o json | jq -r .data._raw | base64 -D
+$ kubectl get secret vso-db-demo-created -n demo-ns -o json | jq -r .data._raw | base64 -D
+```
