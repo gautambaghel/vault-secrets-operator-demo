@@ -13,7 +13,7 @@ This repository contains some samples on how to use the Vault operator with diff
 ### KIND
 
 ```shell
-$ kind get clusters | grep --silent "^kind$$" || kind create cluster --wait=5m --image kindest/node:v1.25.3 --name kind --config kind/config.yaml
+$ kind get clusters | grep --silent "^kind$$" || kind create cluster --wait=5m --image kindest/node:v1.25.3 --name kind --config infra/kind/config.yaml
 $ kubectl config use-context kind-kind
 ```
 
@@ -22,11 +22,11 @@ $ kubectl config use-context kind-kind
 ```shell       
 $ gcloud init
 $ gcloud auth application-default login
-$ echo 'project_id = "'$(gcloud config get-value project)'"' > gke/terraform.tfvars && echo 'region = "us-west1"' >> gke/terraform.tfvars
+$ echo 'project_id = "'$(gcloud config get-value project)'"' > infra/gke/terraform.tfvars && echo 'region = "us-west1"' >> infra/gke/terraform.tfvars
 
-$ terraform -chdir=gke/ init -upgrade
-$ terraform -chdir=gke/ apply -auto-approve
-$ gcloud container clusters get-credentials $(terraform -chdir=gke/ output -raw kubernetes_cluster_name) --region $(terraform -chdir=gke/ output -raw region)
+$ terraform -chdir=infra/gke/ init -upgrade
+$ terraform -chdir=infra/gke/ apply -auto-approve
+$ gcloud container clusters get-credentials $(terraform -chdir=infra/gke/ output -raw kubernetes_cluster_name) --region $(terraform -chdir=infra/gke/ output -raw region)
 ```
 
 ### AWS
@@ -36,9 +36,9 @@ $ export AWS_ACCESS_KEY_ID="..."
 $ export AWS_SECRET_ACCESS_KEY="..."
 $ export AWS_SESSION_TOKEN="..."
                           
-$ terraform -chdir=eks/ init -upgrade
-$ terraform -chdir=eks/ apply -auto-approve
-$ aws eks --region $(terraform -chdir=eks/ output -raw region) update-kubeconfig --name $(terraform -chdir=eks/ output -raw cluster_name)
+$ terraform -chdir=infra/eks/ init -upgrade
+$ terraform -chdir=infra/eks/ apply -auto-approve
+$ aws eks --region $(terraform -chdir=infra/eks/ output -raw region) update-kubeconfig --name $(terraform -chdir=infra/eks/ output -raw cluster_name)
 ```
 
 ### Azure
@@ -46,11 +46,11 @@ $ aws eks --region $(terraform -chdir=eks/ output -raw region) update-kubeconfig
 ```shell
 $ az config set core.allow_broker=true && az account clear && az login
 $ az account set --subscription <subscription_id>
-$ az ad sp create-for-rbac --output json | jq -r '. | "appId = \"" + .appId + "\"\npassword = \"" + .password + "\"" ' > aks/terraform.tfvars
+$ az ad sp create-for-rbac --output json | jq -r '. | "appId = \"" + .appId + "\"\npassword = \"" + .password + "\"" ' > infra/aks/terraform.tfvars
 
-$ terraform -chdir=aks/ init -upgrade
-$ terraform -chdir=aks/ apply -auto-approve
-$ az aks get-credentials --resource-group $(terraform -chdir=aks/ output -raw resource_group_name) --name $(terraform -chdir=aks/ output -raw kubernetes_cluster_name)
+$ terraform -chdir=infra/aks/ init -upgrade
+$ terraform -chdir=infra/aks/ apply -auto-approve
+$ az aks get-credentials --resource-group $(terraform -chdir=infra/aks/ output -raw resource_group_name) --name $(terraform -chdir=infra/aks/ output -raw kubernetes_cluster_name)
 ```
 
 </details>
