@@ -41,39 +41,78 @@ module "vpc" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "19.5.1"
+  version = "19.6.0"
 
   cluster_name    = local.cluster_name
-  cluster_version = "1.25"
+  cluster_version = var.kubernetes_version
+  cluster_endpoint_public_access = true
 
   vpc_id                         = module.vpc.vpc_id
   subnet_ids                     = module.vpc.private_subnets
-  cluster_endpoint_public_access = true
 
   eks_managed_node_group_defaults = {
-    ami_type = "AL2_x86_64"
+    ami_type                   = "AL2_x86_64"
+    instance_types             = ["t3.medium", "t3a.medium"]
+    iam_role_attach_cni_policy = true
+  }
 
+  cluster_addons = {
+      coredns = {
+        most_recent = true
+      }
+      kube-proxy = {
+        most_recent = true
+      }
+      aws-ebs-csi-driver = {
+        most_recent = true
+      }
   }
 
   eks_managed_node_groups = {
-    node_one = {
-      name = "eks-node-group-1"
 
-      instance_types = ["t3.small"]
+    default_node_group = {
+      name            = "managed_node_group"
+      use_name_prefix = true
 
-      min_size     = 1
-      max_size     = 3
-      desired_size = 2
-    }
+      subnet_ids = module.vpc.private_subnets
 
-    node_two = {
-      name = "eks-node-group-2"
-
-      instance_types = ["t3.small"]
-
-      min_size     = 1
+      min_size     = 2
       max_size     = 2
-      desired_size = 1
+      desired_size = 2
+
+      instance_types = ["t3.medium", "t3a.medium"]
+
+      update_config = {
+        max_unavailable_percentage = 1
+      }
+
+      description = "EKS managed node group launch template"
+
+      ebs_optimized           = true
+      disable_api_termination = false
+      enable_monitoring       = true
+
+      block_device_mappings = {
+        xvda = {
+          device_name = "/dev/xvda"
+          ebs = {
+
+            volume_size = "80"
+            volume_type = "gp2"
+            delete_on_termination = true
+          }
+        }
+      }
+
+      create_iam_role          = true
+      iam_role_name            = "eks-nodes"
+      iam_role_use_name_prefix = false
+      iam_role_description     = "EKS managed node group role"
+      iam_role_additional_policies = {
+        AmazonEC2ContainerRegistryReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+        AmazonSSMManagedInstanceCore       = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+        AmazonEBSCSIDriverPolicy           = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+      }
     }
   }
 }
