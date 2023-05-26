@@ -56,6 +56,12 @@ $ helm search repo hashicorp/vault
 $ helm install vault hashicorp/vault -n vault --create-namespace --values vault/vault-server-values.yaml
 ```
 
+For OpenShift
+
+```shell
+$ helm install vault hashicorp/vault -n vault --create-namespace --values vault/vault-server-values.yaml --set "global.openshift=true"
+```
+
 ## Deploy the Vault Operator
 
 ```shell

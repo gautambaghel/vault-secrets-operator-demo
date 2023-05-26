@@ -11,6 +11,14 @@ $ export POSTGRES_PASSWORD=$(kubectl get secret --namespace postgres postgres-po
 $ echo $POSTGRES_PASSWORD
 ```
 
+For OpenShift
+
+```shell
+$ helm upgrade --install postgres bitnami/postgresql --namespace postgres -f postgres/values.yaml
+$ export POSTGRES_PASSWORD=$(kubectl get secret --namespace postgres postgres-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
+$ echo $POSTGRES_PASSWORD
+```
+
 ## Configure Postgres backend in Vault
 
 ```shell
@@ -105,6 +113,16 @@ $ exit
 ```shell
 $ kubectl create ns demo-ns
 $ kubectl apply -f vault/dynamic-secrets/.
+```
+
+For OpenShift
+
+> **Not recommended in production**
+
+```shell
+$ oc create sa demo-sa -n demo-ns
+$ oc adm policy add-scc-to-user privileged -z demo-sa -n demo-ns
+$ oc set sa deployment vso-db-demo demo-sa -n demo-ns
 ```
 
 ## Verify the App pods are running
