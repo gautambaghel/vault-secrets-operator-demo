@@ -65,7 +65,7 @@ $ helm install vault hashicorp/vault -n vault --create-namespace --values vault/
 ## Deploy the Vault Operator
 
 ```shell
-$ helm install vault-secrets-operator hashicorp/vault-secrets-operator --version 0.1.0-beta -n vault-secrets-operator-system --create-namespace --values vault/vault-operator-values.yaml
+$ helm install vault-secrets-operator hashicorp/vault-secrets-operator --version 0.1.0-beta.1 -n vault-secrets-operator-system --create-namespace --values vault/vault-operator-values.yaml
 ```
 
 ## Using the Vault Operator

@@ -81,7 +81,7 @@ $ vault write auth/demo-auth-mount/role/auth-role \
 $ vault secrets enable -path=demo-transit transit
 
 # Create a cache secret cache configuration
-$ vault write demo-transit/config/caching size=500
+$ vault write demo-transit/cache-config size=500
 
 # Create a transit key
 $ vault write -force demo-transit/keys/vso-client-cache
