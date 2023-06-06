@@ -68,13 +68,17 @@ helm install vault hashicorp/vault -n vault --create-namespace --values vault/va
 For OpenShift
 
 ```shell
-helm install vault hashicorp/vault -n vault --create-namespace --values vault/vault-server-values.yaml --set "global.openshift=true"
+helm install vault hashicorp/vault -n vault \
+    --create-namespace --values vault/vault-server-values.yaml \
+    --set "global.openshift=true"
 ```
 
 ## Deploy the Vault Operator
 
 ```shell
-helm install vault-secrets-operator hashicorp/vault-secrets-operator --version 0.1.0-beta.1 -n vault-secrets-operator-system --create-namespace --values vault/vault-operator-values.yaml
+helm install vault-secrets-operator hashicorp/vault-secrets-operator \
+    --version 0.1.0-beta.1 -n vault-secrets-operator-system \
+    --create-namespace --values vault/vault-operator-values.yaml
 ```
 
 ## Using the Vault Operator
