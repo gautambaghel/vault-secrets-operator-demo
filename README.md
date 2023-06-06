@@ -18,7 +18,8 @@ kubectl config use-context kind-kind
 ```shell       
 gcloud init
 gcloud auth application-default login
-echo 'project_id = "'$(gcloud config get-value project)'"' > infra/gke/terraform.tfvars && echo 'region = "us-west1"' >> infra/gke/terraform.tfvars
+echo 'project_id = "'$(gcloud config get-value project)'"' > infra/gke/terraform.tfvars \
+    && echo 'region = "us-west1"' >> infra/gke/terraform.tfvars
 
 terraform -chdir=infra/gke/ init -upgrade
 terraform -chdir=infra/gke/ apply -auto-approve
@@ -62,7 +63,8 @@ az aks get-credentials --resource-group \
 helm repo add hashicorp https://helm.releases.hashicorp.com
 helm repo update
 helm search repo hashicorp/vault
-helm install vault hashicorp/vault -n vault --create-namespace --values vault/vault-server-values.yaml
+helm install vault hashicorp/vault -n vault \
+    --create-namespace --values vault/vault-server-values.yaml
 ```
 
 For OpenShift
