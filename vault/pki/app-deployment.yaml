@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vso
+  namespace: testing
+  labels:
+    test: vso
+spec:
+  replicas: 3
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      test: vso
+  template:
+    metadata:
+      labels:
+        test: vso
+    spec:
+      volumes:
+        - name: secrets
+          secret:
+            secretName: pki1
+      containers:
+        - image: nginx:latest
+          name: nginx
+          volumeMounts:
+            - name: secrets
+              mountPath: /etc/secrets
+              readOnly: true
+          resources:
+            limits:
+              cpu: 0.5
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 50Mi
