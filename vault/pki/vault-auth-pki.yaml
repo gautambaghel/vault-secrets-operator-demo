@@ -1,0 +1,13 @@
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultAuth
+metadata:
+  name: pki-auth
+  namespace: testing
+spec:
+  method: kubernetes
+  mount: demo-pki
+  kubernetes:
+    role: pki-role
+    serviceAccount: default
+    audiences:
+      - vault

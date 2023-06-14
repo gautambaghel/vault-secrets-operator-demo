@@ -38,23 +38,23 @@ vault write pki/root/generate/internal \
   ou="My OU" \
   organization="My organization"
 
-vault auth enable kubernetes
+vault auth enable -path demo-pki kubernetes
 
-vault write auth/kubernetes/config \
+vault write auth/demo-pki/config \
     kubernetes_host="https://$KUBERNETES_PORT_443_TCP_ADDR:443" \
     disable_iss_validation=true
 
-vault write auth/kubernetes/role/role1 -<<EOF
+vault write auth/demo-pki/role/pki-role -<<EOF
 {
   "bound_service_account_names": ["default"],
   "bound_service_account_namespaces": ["testing"],
   "token_ttl": 3600,
-  "token_policies": ["dev"],
+  "token_policies": ["pki-dev"],
   "audience": "vault"
 }
 EOF
 
-vault policy write dev -<<EOF
+vault policy write pki-dev -<<EOF
 path "pki/*" {
   capabilities = ["read", "create", "update"]
 }

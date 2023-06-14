@@ -37,8 +37,7 @@ exit
 
 ```shell
 kubectl create ns app
-kubectl apply -f vault/static-secrets/vault-kv-secret.yaml
-kubectl apply -f vault/static-secrets/vault-kvv2-secret.yaml
+kubectl apply -f vault/static-secrets/.
 ```
 
 ## Verify the static secrets were created
