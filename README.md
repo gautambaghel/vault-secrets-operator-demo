@@ -57,6 +57,8 @@ az aks get-credentials --resource-group \
     --name $(terraform -chdir=infra/aks/ output -raw kubernetes_cluster_name)
 ```
 
+# Vault
+
 ## Deploy Vault
 
 ```shell
@@ -88,3 +90,28 @@ helm install vault-secrets-operator hashicorp/vault-secrets-operator \
 ### * [Working with Static secrets](/vault/static-secrets/README.md)
 ### * [Working with Dynamic secrets](/vault/dynamic-secrets/README.md)
 ### * [Working with PKI](/vault/pki/README.md)
+
+
+# HCP Vault
+
+> **Limited support: works with pre-deployed public cluster & static secrets only**
+
+This guide assumes you have HCP Vault deployed and configured with your cloud providers already
+and the cluster URL is publicly accessible
+
+## Deploy the Vault Operator (HCP Vault)
+
+```shell
+# Uncomment line 7 in hcp-vault/vault-operator-values.yaml file
+# Add publicly accessible endpoint for HCP Vault "https://vault-public-url.hashicorp.cloud:8200"
+
+helm install vault-secrets-operator hashicorp/vault-secrets-operator \
+    --version 0.1.0 -n vault-secrets-operator-system \
+    --create-namespace --values hcp-vault/vault-operator-values.yaml
+```
+
+## Using the Vault Operator (HCP Vault)
+
+### * [Working with Static secrets](/hcp-vault/static-secrets/README.md)
+### * [Working with Dynamic secrets](/hcp-vault/dynamic-secrets/README.md)
+### * [Working with PKI](/hcp-vault/pki/README.md)
