@@ -107,7 +107,7 @@ and the cluster URL is publicly accessible
 
 helm install vault-secrets-operator hashicorp/vault-secrets-operator \
     --version 0.1.0 -n vault-secrets-operator-system \
-    --create-namespace --values hcp-vault/vault-operator-values.yaml
+    --create-namespace --values hcp-vault/hcp-vault-operator-values.yaml
 ```
 
 ## Using the Vault Secrets Operator (HCP Vault)

@@ -73,7 +73,7 @@ exit
 ## Create the static secret CRDs
 
 ```shell
-kubectl apply -f vault/static-secrets/.
+kubectl apply -f hcp-vault/static-secrets/.
 ```
 
 ## Verify the static secrets were created
