@@ -70,7 +70,7 @@ vault kv put kvv2/webapp/config username="static-user-kvv2" password="static-pas
 exit
 ```
 
-## Create a new namespace for the demo app & the static secret CRDs
+## Create the static secret CRDs
 
 ```shell
 kubectl apply -f vault/static-secrets/.
