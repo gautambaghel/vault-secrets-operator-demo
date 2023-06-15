@@ -25,7 +25,7 @@ jobs:
         with:
           version: v0.19.0
           cluster_name: ${{ env.KIND_CLUSTER_NAME }}
-          config: https://raw.githubusercontent.com/hashicorp/vault-secrets-operator/main/test/integration/kind/config.yaml
+          config: infra/kind/config.yaml
           node_image: kindest/node:v1.26.4
 
       - name: Install Vault and the operator
