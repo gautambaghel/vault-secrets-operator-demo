@@ -1,6 +1,6 @@
-# Vault Operator Demo
+# Vault Secrets Operator Demo
 
-This repository contains some samples on how to use the Vault operator with different Cloud hosted Kubernetes solutions.
+This repository contains some samples on how to use the Vault Secrets Operator (VSO) with different Cloud hosted kubernetes solutions.
 
 ## Deploy your Kubernetes cluster
 
@@ -69,7 +69,7 @@ helm install vault hashicorp/vault -n vault \
     --create-namespace --values vault/vault-server-values.yaml
 ```
 
-For OpenShift
+> **For OpenShift**
 
 ```shell
 helm install vault hashicorp/vault -n vault \
@@ -77,7 +77,7 @@ helm install vault hashicorp/vault -n vault \
     --set "global.openshift=true"
 ```
 
-## Deploy the Vault Operator
+## Deploy the Vault Secrets Operator
 
 ```shell
 helm install vault-secrets-operator hashicorp/vault-secrets-operator \
@@ -85,7 +85,7 @@ helm install vault-secrets-operator hashicorp/vault-secrets-operator \
     --create-namespace --values vault/vault-operator-values.yaml
 ```
 
-## Using the Vault Operator
+## Using the Vault Secrets Operator
 
 ### * [Working with Static secrets](/vault/static-secrets/README.md)
 ### * [Working with Dynamic secrets](/vault/dynamic-secrets/README.md)
@@ -99,7 +99,7 @@ helm install vault-secrets-operator hashicorp/vault-secrets-operator \
 This guide assumes you have HCP Vault deployed and configured with your cloud providers already
 and the cluster URL is publicly accessible
 
-## Deploy the Vault Operator (HCP Vault)
+## Deploy the Vault Secrets Operator (HCP Vault)
 
 ```shell
 # Uncomment line 7 in hcp-vault/vault-operator-values.yaml file
@@ -110,7 +110,7 @@ helm install vault-secrets-operator hashicorp/vault-secrets-operator \
     --create-namespace --values hcp-vault/vault-operator-values.yaml
 ```
 
-## Using the Vault Operator (HCP Vault)
+## Using the Vault Secrets Operator (HCP Vault)
 
 ### * [Working with Static secrets](/hcp-vault/static-secrets/README.md)
 ### * [Working with Dynamic secrets](/hcp-vault/dynamic-secrets/README.md)

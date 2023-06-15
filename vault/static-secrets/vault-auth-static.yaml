@@ -1,11 +1,19 @@
+# Refer here for all the supported options for VaultAuth Custom Resource
+# https://raw.githubusercontent.com/hashicorp/vault-secrets-operator/main/chart/crds/secrets.hashicorp.com_vaultauths.yaml
+
 apiVersion: secrets.hashicorp.com/v1beta1
 kind: VaultAuth
 metadata:
   name: static-auth
   namespace: app
 spec:
+  # type of vault auth
   method: kubernetes
+
+  # mount path for the k8s auth engine
   mount: kubernetes
+
+  # k8s vault auth config 
   kubernetes:
     role: role1
     serviceAccount: default

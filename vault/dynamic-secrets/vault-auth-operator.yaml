@@ -7,14 +7,24 @@ metadata:
   labels:
     cacheStorageEncryption: "true"
 spec:
+
+  # type of vault auth
   method: kubernetes
+
+  # mount path for the k8s auth engine
   mount: demo-auth-mount
+
+  # Connection back to the vault auth that manages app secrets
   vaultConnectionRef: dynamic-auth
+
+  # k8s vault auth config 
   kubernetes:
     role: auth-role-operator
     serviceAccount: demo-operator
     audiences:
       - vault
+  
+  # transit encrytion options
   storageEncryption:
     mount: demo-transit
     keyName: vso-client-cache

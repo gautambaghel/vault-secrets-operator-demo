@@ -1,4 +1,8 @@
+# Refer here for all the supported values while deploying Vault
+# https://raw.githubusercontent.com/hashicorp/vault-helm/main/values.yaml
+
 server:
+  # These options are used for testing purposes only
   dev:
     enabled: true
     devRootToken: "root"

@@ -1,5 +1,8 @@
+# Refer here for all the supported options for VaultConnection Custom Resource
+# https://raw.githubusercontent.com/hashicorp/vault-secrets-operator/main/chart/crds/secrets.hashicorp.com_vaultconnections.yaml
+
 defaultVaultConnection:
-  # toggles the deployment of the VaultAuthMethod CR
+  # Toggles the deployment of the VaultConnection CR
   enabled: true
 
   # Address of the Vault Server

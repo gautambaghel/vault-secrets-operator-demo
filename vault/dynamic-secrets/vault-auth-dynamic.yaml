@@ -4,8 +4,13 @@ metadata:
   name: dynamic-auth
   namespace: demo-ns
 spec:
+  # type of vault auth
   method: kubernetes
+
+  # mount path for the k8s auth engine
   mount: demo-auth-mount
+
+  # k8s vault auth config 
   kubernetes:
     role: auth-role
     serviceAccount: default

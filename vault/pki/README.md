@@ -1,6 +1,5 @@
 # Working with PKI certificates
 
-
 ## Create the initial k8s setup
 
 ```sh

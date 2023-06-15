@@ -4,9 +4,16 @@ metadata:
   name: static-auth
   namespace: app
 spec:
+  # type of vault auth
   method: kubernetes
+
+  # mount path for the k8s auth engine
   mount: kubernetes
+
+  # namespace for HCP Vault
   namespace: admin
+
+  # k8s vault auth config 
   kubernetes:
     role: role1
     serviceAccount: app

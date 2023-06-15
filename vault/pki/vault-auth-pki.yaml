@@ -4,8 +4,13 @@ metadata:
   name: pki-auth
   namespace: testing
 spec:
+  # type of vault auth
   method: kubernetes
+
+  # mount path for the k8s auth engine
   mount: demo-pki
+
+  # k8s vault auth config 
   kubernetes:
     role: pki-role
     serviceAccount: default
