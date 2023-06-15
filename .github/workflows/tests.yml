@@ -12,7 +12,7 @@ on:
 
 jobs:
 
-  create:
+  test:
     runs-on: ubuntu-latest
     env:
       KIND_CLUSTER_NAME: vault-secrets-operator
@@ -39,12 +39,6 @@ jobs:
           --version 0.1.0 -n vault-secrets-operator-system \
           --create-namespace --values vault/vault-operator-values.yaml
 
-  static-secrets:
-    runs-on: ubuntu-latest
-    env:
-      KIND_CLUSTER_NAME: vault-secrets-operator
-
-    steps:
       - name: Setup Vault 
         run: |
           kubectl exec --stdin=true --tty=true vault-0 -n vault -- vault auth enable kubernetes && \
@@ -68,7 +62,7 @@ jobs:
           vault kv put kv/webapp/config username="static-user" password="static-password" && \
           vault kv put kvv2/webapp/config username="static-user-kvv2" password="static-password-kvv2"
 
-      - name: Deploy CRDs
+      - name: Test Static secrets
         run: |
           kubectl create ns app
           kubectl apply -f vault/static-secrets/.
