@@ -4,5 +4,5 @@ defaultVaultConnection:
 
   # Address of the Vault Server
   # Example: http://vault.default.svc.cluster.local:8200
-  # address: "https://vault-cluster-public-vault-generated-stuff-here.z1.hashicorp.cloud:8200"
+  address: ${VAULT_ADDR}
   skipTLSVerify: false

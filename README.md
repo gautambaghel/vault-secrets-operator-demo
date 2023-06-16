@@ -102,6 +102,10 @@ and the cluster URL is publicly accessible
 ## Deploy the Vault Secrets Operator (HCP Vault)
 
 ```shell
+export VAULT_ADDR="..."
+export VAULT_NAMESPACE="..."
+export VAULT_TOKEN="..."
+
 # Uncomment line 7 in hcp-vault/vault-operator-values.yaml file
 # Add publicly accessible endpoint for HCP Vault "https://vault-public-url.hashicorp.cloud:8200"
 

@@ -3,11 +3,11 @@
 ## Configure k8s
 
 ```shell
-kubectl create ns app
-kubectl create sa app -n app
+kubectl create ns app-sa
+kubectl create sa app-sa -n app
 kubectl create clusterrolebinding vault-client-auth-delegator \
   --clusterrole=system:auth-delegator \
-  --serviceaccount=app:app
+  --serviceaccount=app:app-sa
 
 kubectl create -f - <<EOF
 apiVersion: v1
@@ -16,7 +16,7 @@ metadata:
   name: vault-token
   namespace: app
   annotations:
-    kubernetes.io/service-account.name: app
+    kubernetes.io/service-account.name: app-sa
 type: kubernetes.io/service-account-token
 EOF
 
@@ -35,10 +35,6 @@ export KUBE_HOST=$(kubectl config view --raw --minify --flatten \
 ## Configure HCP Vault
 
 ```shell
-export VAULT_ADDR="..."
-export VAULT_NAMESPACE="..."
-export VAULT_TOKEN="..."
-
 vault auth enable kubernetes
 vault write auth/kubernetes/config \
    token_reviewer_jwt="$TOKEN_REVIEW_JWT" \
@@ -59,7 +55,7 @@ path "kvv2/*" {
 EOF
 
 vault write auth/kubernetes/role/role1 \
-        bound_service_account_names=app \
+        bound_service_account_names=app-sa \
         bound_service_account_namespaces=app \
         policies=dev \
         audience=vault \
