@@ -16,6 +16,6 @@ spec:
   # k8s vault auth config 
   kubernetes:
     role: role1
-    serviceAccount: app
+    serviceAccount: app-sa
     audiences:
       - vault

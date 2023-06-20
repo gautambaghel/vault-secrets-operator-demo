@@ -3,7 +3,7 @@
 ## Configure k8s
 
 ```shell
-kubectl create ns app-sa
+kubectl create ns app
 kubectl create sa app-sa -n app
 kubectl create clusterrolebinding vault-client-auth-delegator \
   --clusterrole=system:auth-delegator \
